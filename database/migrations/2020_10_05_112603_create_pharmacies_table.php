@@ -19,7 +19,7 @@ class CreatePharmaciesTable extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
             $table->string('adress_street');
-            $table->string('adress_house_number');
+            $table->string('adress_building_number');
             $table->string('adress_zip_code');
             $table->string('adress_city');
             $table->string('contact_first_name')->nullable();

@@ -30,14 +30,16 @@ class UserFactory extends Factory
         4 => 'south',
       ];
 
+      $random = mt_rand(1, 10);
 
-        return [
-            'name' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
-            'email_verified_at' => now(),
-            'region_id' => Region::where('name','=',$regions[random_int(1,4)])->first(),
-            'password' => Hash::make('1234'), // password
-            'remember_token' => Str::random(10),
-        ];
+      return [
+          'name' => $this->faker->name,
+          'email' => $this->faker->unique()->safeEmail,
+          'email_verified_at' => now(),
+          'region_id' => Region::where('name','=',$regions[mt_rand(1,4)])->first(),
+          'password' => Hash::make('1234'), // password
+          'role' => $random >= 9 ? 'admin' : 'user',
+          'remember_token' => Str::random(10),
+      ];
     }
 }

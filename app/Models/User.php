@@ -42,14 +42,14 @@ class User extends Authenticatable
     ];
 
     public function region(){
-      $this->belongsTo(Region::class);
+     return $this->belongsTo(Region::class);
     }
 
     public function appointments(){
-      $this->hasMany(Appointment::class);
+     return $this->hasMany(Appointment::class);
     }
     
     public function pharmacies(){
-      $this->hasMany(Pharmacy::class);
+     return $this->hasMany(Pharmacy::class);
     }
 }

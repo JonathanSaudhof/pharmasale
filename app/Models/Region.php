@@ -9,7 +9,10 @@ class Region extends Model
 {
     use HasFactory;
 
-    public function user(){
-      $this->hasMany(User::class);
+    public function users(){
+     return $this->hasMany(User::class);
+    }
+    public function pharamacies(){
+      return $this->hasMany(Pharmacy::class);
     }
 }

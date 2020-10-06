@@ -18,7 +18,7 @@ class CreateAppointmentsTable extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('pharmacy_id')->constrained()->cascadeOnDelete();
             $table->text('note_body');
-            $table->dateTime('stats_at');
+            $table->dateTime('starts_at');
             $table->dateTime('ends_at');
             $table->timestamps();
         });
