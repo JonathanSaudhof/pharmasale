@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,3 +20,12 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::prefix("/user")->group(function(){
+  Route::get('/', [App\Http\Controllers\UserController::class, 'index']);
+  Route::get('/{userId}', [App\Http\Controllers\UserController::class, 'show']);
+  Route::get('/{userId}/edit', [App\Http\Controllers\UserController::class, 'edit']);
+  Route::post('/',[App\Http\Controllers\UserController::class, 'create']);
+  Route::put('/{userId}',[App\Http\Controllers\UserController::class, 'update']);
+  Route::delete('/{userId}',[App\Http\Controllers\UserController::class, 'delete']);
+});
