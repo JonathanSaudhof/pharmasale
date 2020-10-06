@@ -35,7 +35,7 @@ class AppointmentFactory extends Factory
                         { 
                           return $this->faker->dateTimeBetween($startDate = $attributes['starts_at'], $endDate = '+1 hour', $timezone = null);
                         }, // DateTime('2003-03-15 02:00:49', 'Africa/Lagos')
-            'note_body' => '<h1> This is a note </h1>',
+            'note_body' => '<h1> This is a note</h1><div class="content">'.$this->faker->realText($maxNbChars = 200, $indexSize = 2).'</div>',
         ];
     }
 }

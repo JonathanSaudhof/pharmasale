@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
 
       // Create 10 other sales guys
       User::factory(10)->hasPharmacies(3)->create(['role' => 'user'])->each(function($user){
+        
         $pharmacies = Pharmacy::where('user_id', '=', $user->id)->get();
 
         foreach($pharmacies as &$pharmacy){
