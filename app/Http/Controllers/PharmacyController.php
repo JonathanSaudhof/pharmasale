@@ -28,7 +28,7 @@ class PharmacyController extends Controller
       // returns Pharmacy with associated user
       
       // TODO: return edit view
-      return Pharmacy::with('users')->find($regionId);
+      return Pharmacy::with(['user', 'region'])->find($regionId);
 
     }
 

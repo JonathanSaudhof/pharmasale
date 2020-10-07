@@ -48,5 +48,13 @@ Route::prefix("/pharmacy")->group(function(){
   Route::delete('/{pharmacyId}',[App\Http\Controllers\PharmacyController::class, 'delete']);
 });
 
+Route::prefix("/appointment")->group(function(){
+  Route::get('/', [App\Http\Controllers\AppointmentController::class, 'index']);
+  Route::get('/{appointmentId}', [App\Http\Controllers\AppointmentController::class, 'show']);
+  Route::get('/{appointmentId}/edit', [App\Http\Controllers\AppointmentController::class, 'edit']);
+  Route::post('/',[App\Http\Controllers\AppointmentController::class, 'create']);
+  Route::put('/{appointmentId}',[App\Http\Controllers\AppointmentController::class, 'update']);
+  Route::delete('/{appointmentId}',[App\Http\Controllers\AppointmentController::class, 'delete']);
+});
 
 
