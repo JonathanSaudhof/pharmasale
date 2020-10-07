@@ -29,3 +29,24 @@ Route::prefix("/user")->group(function(){
   Route::put('/{userId}',[App\Http\Controllers\UserController::class, 'update']);
   Route::delete('/{userId}',[App\Http\Controllers\UserController::class, 'delete']);
 });
+
+Route::prefix("/region")->group(function(){
+  Route::get('/', [App\Http\Controllers\RegionController::class, 'index']);
+  Route::get('/{regionId}', [App\Http\Controllers\RegionController::class, 'show']);
+  Route::get('/{regionId}/edit', [App\Http\Controllers\RegionController::class, 'edit']);
+  Route::post('/',[App\Http\Controllers\RegionController::class, 'create']);
+  Route::put('/{regionId}',[App\Http\Controllers\RegionController::class, 'update']);
+  Route::delete('/{regionId}',[App\Http\Controllers\RegionController::class, 'delete']);
+});
+
+Route::prefix("/pharmacy")->group(function(){
+  Route::get('/', [App\Http\Controllers\PharmacyController::class, 'index']);
+  Route::get('/{pharmacyId}', [App\Http\Controllers\PharmacyController::class, 'show']);
+  Route::get('/{pharmacyId}/edit', [App\Http\Controllers\PharmacyController::class, 'edit']);
+  Route::post('/',[App\Http\Controllers\PharmacyController::class, 'create']);
+  Route::put('/{pharmacyId}',[App\Http\Controllers\PharmacyController::class, 'update']);
+  Route::delete('/{pharmacyId}',[App\Http\Controllers\PharmacyController::class, 'delete']);
+});
+
+
+

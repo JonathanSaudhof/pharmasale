@@ -15,33 +15,39 @@ class UserController extends Controller
   
     public function index(){
       // TODO: change to view(user.overview)
-      return User::all();
+    
+      return User::with('region')->get();
     }
 
     public function show($userId){
       // TODO: change to change to view(user.profile)
-      return User::where('id', '=', $userId)->first();
+      //  TODO: restrict the region by only showing the name
+      
+      return User::with('region')->find($userId);
+
     }
 
     public function edit($userId){
       // TODO: change to view(user.edit)
-      return User::where('id', '=', $userId)->first();
+      return User::with('region')->find($userId);
     }
 
     public function update(Request $request, $userId){
 
+      // TODO: is it possible to update a user with just the region.name and without the region.id?
+
       $user = User::find($userId);
-      //update user
       $user->region_id = $request->region_id;
       $user->name = $request->name;
       $user->email = $request->email;
-      $user->role = $request->role;
+      $user->role = $request->role; 
 
       return $user->save();
       // TODO: change to view(user.edit)
       // return User::where('id', '=', $userId)->first();
     }
     public function create(Request $request){
+      // TODO: is it possible to create a user with just the region.name and without the region.id?
       User::create([
         'name' =>$request->name,
         'region_id' => $request->reqion_id,
