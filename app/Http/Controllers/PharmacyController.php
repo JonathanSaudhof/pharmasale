@@ -3,19 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pharmacy;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PharmacyController extends Controller
 {
     //
     public function __construct()
     {
-      
+      $this->middleware('auth');
     }
 
     public function index(){
       // TODO: return list view
-      return Pharmacy::with(['user', 'region'])->get();
+      // return Pharmacy::with(['user', 'region'])->get();
+      $user = Auth::user();
+      if($user->isAdmin()){
+        return view('pharmacy.list', ['pharmacies'=> Pharmacy::with(['user', 'region'])->get()]);
+      } else {
+        return view('pharmacy.list', ['pharmacies'=> Pharmacy::with(['user', 'region'])->where('user_id','=',$user->id)->get()]);
+      };
     }
 
     public function show($regionId){

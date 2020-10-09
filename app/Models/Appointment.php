@@ -23,7 +23,7 @@ class Appointment extends Model
     }
 
     public function pharmacy(){
-      return $this->belongsTo(User::class);
+      return $this->belongsTo(Pharmacy::class);
     }
 
 }

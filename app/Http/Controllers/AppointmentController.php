@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 class AppointmentController extends Controller
-{
+{   
+    public function __construct()
+    {
+      $this->middleware('auth');
+    }
     
     private function checkTimestampValidity($timestamp){
 
@@ -22,7 +26,8 @@ class AppointmentController extends Controller
 
     public function index(){
       // TODO: return list view
-      return Appointment::with(['pharmacy', 'user'])->get();
+      $this->authorize('viewAny', [Auth::user()]);
+      return view('appointment.list',['appointments'=> Appointment::with(['pharmacy', 'user'])->get()]);
       
     }
 

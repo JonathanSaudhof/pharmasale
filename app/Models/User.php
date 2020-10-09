@@ -40,6 +40,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function isAdmin(){
+      return $this->role === 'admin';
+    }
+
+    public function isMine($ressource){
+      if($ressource->user_id && $ressource->user_id === $this->id){
+        return true;
+      }
+
+      return false;
+    }
 
     public function region(){
      return $this->belongsTo(Region::class);
