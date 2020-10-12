@@ -13,16 +13,7 @@
             </div>
               
             @if (Auth::user()->isAdmin())
-                
-            <div class="card mb-4 shadow-sm">
-              <div class="card-header">{{ __('Current Statistics') }}</div>
-              <div class="card-body">
-                 <p>Users: {{$data['userCount']}} </p>
-                 <p>Regions: {{$data['regionCount']}} </p>
-              </div>
-            </div>
-            
-            <div class="card button-container shadow-sm">
+            <div class="card button-container shadow-sm mb-4">
               <div class="card-header">Shortcuts</div>
               <div class="card-body">
                 <a class="no-underline" href="{{route('user.create')}}" >
@@ -34,8 +25,29 @@
                </a>
               </div>
             </div>
-            @else
+                
+            <div class="card mb-4 shadow-sm">
+              <div class="card-header">{{ __('Current Statistics') }}</div>
+              <div class="card-body">
+                 <p>Users: {{$data['userCount']}} </p>
+                 <p>Regions: {{$data['regionCount']}} </p>
+              </div>
+            </div>
             
+          
+            @else
+            <div class="card button-container shadow-sm mb-4">
+              <div class="card-header">Shortcuts</div>
+              <div class="card-body">
+                <a class="no-underline" href="{{route('pharmacy.create')}}" >
+                  <button class="bg-gray-400 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 border border-gray-800 rounded shadow-sm"> + Pharmacy</button>
+                </a>
+
+               <a class="no-underline"  href="{{route('appointment.create')}}" >
+                <button class="bg-gray-400 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow-sm"> + Appointment</button>
+               </a>
+              </div>
+            </div>
             {{-- Todays Appointments --}}
             <table class="col-12 ml-auto mr-auto shadow-sm overflow-hidden border-collapse border-gray-200 roundend sm:rounded-lg divide-y divide-gray-200 mb-4">
 
@@ -127,18 +139,7 @@
                 </tbody>
             </table>
             
-            <div class="card button-container shadow-sm">
-              <div class="card-header">Shortcuts</div>
-              <div class="card-body">
-                <a class="no-underline" href="{{route('pharmacy.create')}}" >
-                  <button class="bg-gray-400 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 border border-gray-800 rounded shadow-sm"> + Pharmacy</button>
-                </a>
-
-               <a class="no-underline"  href="{{route('appointment.create')}}" >
-                <button class="bg-gray-400 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow-sm"> + Appointment</button>
-               </a>
-              </div>
-            </div>
+            
        
         
             @endif
