@@ -58,10 +58,9 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ],
-        "pre-install-cmd": [
-            "composer update -dev"
-        ],
+        "pre-install-cmd": [],
         "post-install-cmd": [
+            "composer update -dev",
             "@php artisan migrate --seed --force"
         ]
     }
