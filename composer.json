@@ -61,7 +61,7 @@
         ],
         "pre-install-cmd": [],
         "post-install-cmd": [
-            "@php artisan migrate --seed --force"
+            "@php artisan migrate:fresh --seed --force"
         ]
     }
 }
