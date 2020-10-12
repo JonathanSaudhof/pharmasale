@@ -6,6 +6,8 @@ use App\Models\Appointment;
 use App\Models\Pharmacy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Phar;
+
 class AppointmentController extends Controller
 {   
     public function __construct()
@@ -26,7 +28,7 @@ class AppointmentController extends Controller
 
 
     public function index(){
-      // TODO: return list view
+    
       $currentUser = Auth::user();
       // $this->authorize('viewAny', [$currentUser]);
 
@@ -39,42 +41,26 @@ class AppointmentController extends Controller
     }
 
     public function show($appointmentId){
-  
-      // TODO: return detail view
-      return Appointment::with(['pharmacy', 'user'])->find($appointmentId);
+      return view('appointment.detail', ['appointment'=>Appointment::with(['pharmacy', 'user'])->find($appointmentId)]) ;
     }
 
     public function edit($appointmentId){
       
-      // TODO: return edit view
-      return Appointment::with(['pharmacy', 'user'])->find($appointmentId);
-
+      if(Auth::user()->isAdmin()){
+        return view('appointment.edit', ['appointment'=>Appointment::with(['pharmacy', 'user'])->find($appointmentId), 'pharmacies'=> Pharmacy::all()]);
+      } else {
+        
+        return view('appointment.edit', ['appointment'=>Appointment::with(['pharmacy', 'user'])->find($appointmentId), 'pharmacies'=> Pharmacy::where('user_id','=', Auth::user()->id)->get()]);
+      }
     }
+
+  
 
     public function update(Request $request, $appointmentId){
 
-      if(!$request->has([
-        'user_id',
-        'pharmacy_id','note_body',
-        'starts_at',
-        'ends_at'
-      ]))
-      {
-        abort(400, 'Missing Values');
-      }
-
-      if(!$this->checkTimestampValidity($request->starts_at) || !$this->checkTimestampValidity($request->ends_at))
-      {
-        abort(400, 'Wrong Timestamp Format');
-      }
-
-      if(strtotime($request->starts_at)>=strtotime($request->ends_at)){
-        abort(400, 'Start Time is before or equal to end time');
-      }
-
       $appointment=Appointment::find($appointmentId);
 
-      $appointment->user_id= $request->user_id;
+      $appointment->user_id= Pharmacy::find($request->pharmacy_id)->user_id;
       $appointment->pharmacy_id= $request->pharmacy_id;
       $appointment->note_body= $request->note_body;
       $appointment->starts_at= $request->starts_at;
@@ -85,6 +71,8 @@ class AppointmentController extends Controller
       return redirect('appointment/'.$appointment->id);
 
     }
+
+
     public function create($pharmacyId=null){
       // dd($pharmacyId);
       if(Auth::user()->isAdmin()){
@@ -98,27 +86,9 @@ class AppointmentController extends Controller
 
       //TODO:Is it possible to check, if the user is allowed to make the appointment? or should there be a default value?
 
-      if(!$request->has([
-        'user_id',
-        'pharmacy_id','note_body',
-        'starts_at',
-        'ends_at'
-      ]))
-      {
-        abort(400, 'Missing Values');
-      }
-
-      if(!$this->checkTimestampValidity($request->starts_at) || !$this->checkTimestampValidity($request->ends_at))
-      {
-        abort(400, 'Wrong Timestamp Format');
-      }
-
-      if(strtotime($request->starts_at)>=strtotime($request->ends_at)){
-        abort(400, 'Start Time is before or equal to end time');
-      }
 
       $newAppointment = Appointment::create([
-      'user_id'=> $request->user_id,
+      'user_id'=> Pharmacy::find($request->pharmacy_id)->user_id,
       'pharmacy_id'=> $request->pharmacy_id,
       'note_body'=> $request->note_body,
       'starts_at'=> $request->starts_at,
@@ -132,8 +102,9 @@ class AppointmentController extends Controller
     }
 
     public function delete($appointmentId){
-      // TODO: change to accept arrays to allow mutliple deletes at once
-      return Appointment::destroy($appointmentId);
+    
+      Appointment::destroy($appointmentId);
 
+      return redirect(route('appointment.index'));
     }
 }
