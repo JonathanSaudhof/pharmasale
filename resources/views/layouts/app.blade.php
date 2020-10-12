@@ -53,6 +53,7 @@
                           <a class="nav-link" href="{{route('appointment.index')}}">{{ __('Appointments') }}</a>
                         </li>
                       </ul>
+                     
                     @endauth
 
                     <!-- Right Side Of Navbar -->
@@ -92,8 +93,12 @@
         </nav>
 
         <main class="py-4">
-            @yield('content')
+          @yield('content')
+      
         </main>
     </div>
+    
+    <script type="text/javascript" src="/js/app.js'"></script>
+    <script type="text/javascript" src="/js/all.js"></script>
 </body>
 </html>

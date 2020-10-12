@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
+            <div class="card shadow">
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
@@ -65,8 +65,25 @@
                             </div>
                         </div>
                     </form>
+                  </div>
+                  <div class="card-footer w-full flex-column justify-start">
+                    <div class="w-full">Demo Accounts: </div>
+                    <form method="POST" action="{{ route('login') }}" class="flex justify-center m-2"  >
+                      @csrf
+                      <input id="email" name="email" type="hidden" value="admin@example.com">
+                      <input id="password" name="password" type="hidden" value="1234">
+                      
+                      <button type="submit" class="w-1/2  bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded">👩🏽‍⚖️ <br/>Admin </button>
+                    </form>
+                    <form method="POST" action="{{ route('login') }}" class="flex justify-center m-2">
+                      @csrf
+                      <input id="email" name="email" type="hidden" value="user@example.com">
+                      <input id="password" name="password" type="hidden" value="1234">
+                      
+                      <button type="submit" class="w-1/2 ml-auto mr-auto bg-gray-100 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded">👨🏽‍💻<br/>User Account </button>
+                    </form>
+                  </div>
                 </div>
-            </div>
         </div>
     </div>
 </div>

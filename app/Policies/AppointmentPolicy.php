@@ -18,7 +18,8 @@ class AppointmentPolicy
      */
     public function viewAny(User $user)
     {
-        //
+      dd($user);
+      return true;
         
     }
 
@@ -32,7 +33,7 @@ class AppointmentPolicy
     public function view(User $user, Appointment $appointment)
     {
         //
-        return $user->id === $appointment->user_id;
+        return $user->id === $appointment->user_id || $user->isAdmin();
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Pharmacy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 class AppointmentController extends Controller
@@ -26,8 +27,14 @@ class AppointmentController extends Controller
 
     public function index(){
       // TODO: return list view
-      $this->authorize('viewAny', [Auth::user()]);
-      return view('appointment.list',['appointments'=> Appointment::with(['pharmacy', 'user'])->get()]);
+      $currentUser = Auth::user();
+      // $this->authorize('viewAny', [$currentUser]);
+
+      if($currentUser->isAdmin()){
+        return view('appointment.list',['appointments'=> Appointment::with(['pharmacy', 'user'])->orderBy('starts_at','asc')->get()]);
+      }else {
+        return view('appointment.list', ['appointments'=> Appointment::with(['pharmacy', 'user'])->where('user_id', '=', $currentUser->id)->get()]);
+      }
       
     }
 
@@ -78,8 +85,16 @@ class AppointmentController extends Controller
       return redirect('appointment/'.$appointment->id);
 
     }
-
-    public function create(Request $request){
+    public function create($pharmacyId=null){
+      // dd($pharmacyId);
+      if(Auth::user()->isAdmin()){
+        return view('appointment.create', ['pharmacies'=> Pharmacy::all(),'forPharmacyId'=>$pharmacyId]);
+      } else {
+        
+        return view('appointment.create', ['pharmacies'=> Pharmacy::where('user_id','=', Auth::user()->id)->get(), 'forPharmacyId'=>$pharmacyId]);
+      }
+    }
+    public function store(Request $request){
 
       //TODO:Is it possible to check, if the user is allowed to make the appointment? or should there be a default value?
 

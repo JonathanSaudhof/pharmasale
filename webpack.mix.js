@@ -13,14 +13,8 @@ const tailwindcss = require("tailwindcss");
 
 mix.js("resources/js/app.js", "public/js")
     .sass("resources/sass/app.scss", "public/css")
+    .scripts(["resources/js/myScripts.js"], "public/js/all.js")
     .options({
         processCssUrls: false,
         postCss: [tailwindcss("./tailwind.config.js")]
     });
-
-// mix.js("resources/js/app.js", "public/js")
-//     .sass("resources/sass/app.scss", "public/css")
-//     .options({
-//         processCssUrls: false,
-//         postCss: [tailwindcss("./tailwind.config.js")]
-//     });

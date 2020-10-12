@@ -22,8 +22,7 @@ class CreatePharmaciesTable extends Migration
             $table->string('adress_building_number');
             $table->string('adress_zip_code');
             $table->string('adress_city');
-            $table->string('contact_first_name')->nullable();
-            $table->string('contact_last_name')->nullable();
+            $table->string('contact_name')->nullable();
             $table->string('contact_email')->nullable();
             $table->string('contact_phone')->nullable();
             $table->timestamps();

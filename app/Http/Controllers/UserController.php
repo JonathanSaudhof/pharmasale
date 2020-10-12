@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Region;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+ 
 class UserController extends Controller
 {
     public function __construct()
@@ -15,7 +18,6 @@ class UserController extends Controller
     public function index(){
       // TODO: change to view(user.overview)
       $this->authorize('viewAny', [Auth::user()]);
- 
       return view('user.list', ['users' => User::with('region')->get()]);
     }
 
@@ -28,44 +30,52 @@ class UserController extends Controller
 
     }
 
-    public function edit(User $user){
-      // TODO: change to view(user.edit)
-      $this->authorize('view');
-      return User::with('region')->find($user->id);
+    public function edit($userId){
+
+      $this->authorize('update', [Auth::user()]);
+      return view('user.edit', ['user' => User::with('region')->find($userId), 'regions' => Region::all()]);
     }
 
-    public function update(Request $request,User $user){
+    public function update(Request $request, $userId){
+      // dd($request);
+      $this->authorize('update',[Auth::user()]);
 
-      $this->authorize('update');
-
-      $userToUpdate = User::find($user->id);
-      $userToUpdate->region_id = $request->region_id;
+      $userToUpdate = User::find($userId);
+      $userToUpdate->region_id = $request->region;
       $userToUpdate->name = $request->name;
       $userToUpdate->email = $request->email;
       $userToUpdate->role = $request->role; 
 
-      return $user->save();
+      $userToUpdate->save();
       // TODO: change to view(user.edit)
+      return redirect(route('user.show', $userId));
     }
-    public function create(Request $request){
-      // TODO: is it possible to create a user with just the region.name and without the region.id?
-      $this->authorize('create');
+
+    public function create(){
+      $this->authorize('create',[Auth::user()]);
       
-      User::create([
+      return view('user.create', ['regions' => Region::all()]);
+    }
+
+    public function store(Request $request){
+      // TODO: is it possible to create a user with just the region.name and without the region.id?
+      $this->authorize('create',[Auth::user()] );
+      // dd($request->role);
+      $newUsr = User::create([
         'name' =>$request->name,
-        'region_id' => $request->reqion_id,
+        'region_id' => $request->region,
         'email' => $request->email,
         'role' => $request->role,
-        'password'=>$request->password,
+        'password'=>Hash::make($request->password),
       ]);
+      return redirect(route("user.show", $newUsr->id));
     }
 
-    public function delete($userId){
+    public function destroy($userId){
       // TODO: change to accept arrays to allow mutliple deletes at once
 
-      $this->authorize('delete');
-
-      return User::destroy($userId);
-
+      $this->authorize('delete', [Auth::user()]);
+      User::destroy($userId);
+      return redirect(route('user.index'));
     }
 }
