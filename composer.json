@@ -60,7 +60,6 @@
         ],
         "pre-install-cmd": [],
         "post-install-cmd": [
-            "composer update -dev",
             "@php artisan migrate --seed --force"
         ]
     }
