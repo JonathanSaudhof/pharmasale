@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Region;
-use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
@@ -16,60 +15,50 @@ class RegionController extends Controller
     }
 
     public function index(){
-      // TODO: return list view
-      $this->authorize('viewAny', [Auth::user()]);
-      return view('region.list', ['regions' =>Region::all()]);
+      
+      return view('region.index', ['regions' => Region::all()]);
     }
 
-    public function show($regionId){
-      // returns Region with associated users
-      // TODO: return detail view
-      $this->authorize('view', [Auth::user()]);
-      return view('region.detail',['region'=> Region::with('users')->find($regionId)]);
+    public function show(Region  $region){
+      
+      return view('region.detail',['region'=> $region, 'users' => $region->users()->get()]);
     }
 
-    public function edit($regionId){
-      // returns Region with associated users
-      // TODO: return edit view
-      $this->authorize('update', [Auth::user()]);
-      return view('region.edit',['region'=>Region::with('users')->find($regionId)]);
+    public function edit(Region $region){
+      
+      return view('region.edit', ['region' => $region]);
 
     }
 
-    public function update(Request $request, $regionId){
+    public function update(Request $request, Region $region){
 
-      // TODO: is it possible to update a user with just the region.name and without the region.id?
-      $this->authorize('update', [Auth::user()]);
-      $region = Region::find($regionId);
-      $region->name = $request->name;
-      $region->save();
-
-      return redirect('region/'.$region->id);
+      return redirect(route('region.show', $region->update($this->validation($request))));
    
     }
     public function create(){
-      $this->authorize('create',[Auth::user()]);
 
       return view('region.create');
+
     }
 
     public function store(Request $request){
-      // TODO: is it possible to create a user with just the region.name and without the region.id?
       
-      if(!$request->has('name')){
-        abort(400, "Missing Name");
-      };
-      
-      $newRegion = Region::create([
-        'name' =>$request->name,
-      ]);
-      return redirect(route('region.show'),$newRegion->id);
+      return redirect(route('region.show', Region::create($this->validation($request))));
+
     }
 
-    public function delete($regionId){
-      // TODO: change to accept arrays to allow mutliple deletes at once
-       Region::destroy($regionId);
+    public function destroy(Region $region){
+      
+       $region->delete();
        return redirect(route('region.index'));
+
+    }
+    private function validation(Request $request){
+
+      return $request->validate([
+        'name' => 'required',
+      ]);
+
     }
 
 

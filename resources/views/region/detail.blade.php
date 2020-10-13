@@ -26,7 +26,7 @@
       </tr>
     </thead>
     <tbody class="bg-white border divide-y divide-gray-200">
-    @foreach ($region->users as $user)
+    @foreach ($users as $user)
     @if($user->id !== Auth::user()->id)
     <tr class="border">
         <td class="px-6 py-4 whitespace-no-wrap w-1">
@@ -49,18 +49,18 @@
       @endforeach
     </tbody>
   </table>
-  <div class="hidden bg-gray-100 bg-opacity-75 fixed w-screen h-screen flex justify-center items-center inset-0" id="delete-{{$user->id}}">
+  <div class="hidden bg-gray-100 bg-opacity-75 fixed w-screen h-screen flex justify-center items-center inset-0" id="delete-{{$region->id}}">
     <div role="alert" class="shadow w-1/4">
       <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
         Are you sure?
       </div>
       <div class="border flex justify-evenly border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700" >
-        <form method="POST" action="{{route('user.delete', $user->id)}}" >
+        <form method="POST" action="{{route('region.destroy', $region->id)}}" >
           @csrf
           @method('DELETE')
           <button class='hover:bg-red-700 hover:text-white text-black font-bold border py-2 px-4 rounded' type="submit">Yes</button>
         </form>
-        <button class='border hover:bg-blue-700 hover:text-white text-black font-bold py-2 px-4 rounded' onclick="openClose('delete', '{{$user->id}}');">No</button>
+        <button class='border hover:bg-blue-700 hover:text-white text-black font-bold py-2 px-4 rounded' onclick="openClose('delete', '{{$region->id}}');">No</button>
     </div>
   
 </div>
