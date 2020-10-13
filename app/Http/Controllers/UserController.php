@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Region;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -16,39 +17,40 @@ class UserController extends Controller
     }
   
     public function index(){
-      // TODO: change to view(user.overview)
-      $this->authorize('viewAny', [Auth::user()]);
-      return view('user.list', ['users' => User::with('region')->get()]);
+      // TODO: change authorization
+      // $this->authorize('viewAny', [Auth::user()]);
+
+      return view('user.index', ['users' => User::with('region')->get()]);
     }
 
-    public function show($userId){
-      // TODO: change to change to view(user.profile)
+    public function show(User $user){
+      
       //  TODO: restrict the region by only showing the name
-      $this->authorize('view', [Auth::user()]);
-      // ddd($userId);
-      return view('user.detail', ['user'=> User::with('region')->find($userId)]);
+      // $this->authorize('view', [Auth::user()]);
+      dd(compact($user));
+      return view('user.detail', compact($user));
 
     }
 
-    public function edit($userId){
-
-      $this->authorize('update', [Auth::user()]);
-      return view('user.edit', ['user' => User::with('region')->find($userId), 'regions' => Region::all()]);
+    public function edit(User $user){
+      // TODO: change authorization
+      // $this->authorize('update', [Auth::user()]);
+      return view('user.edit', ['user' => $user, 'regions' => Region::all()]);
     }
 
-    public function update(Request $request, $userId){
-      // dd($request);
-      $this->authorize('update',[Auth::user()]);
+    public function update(Request $request, User $user){
+      // 
+      // $this->authorize('update',[Auth::user()]);
 
-      $userToUpdate = User::find($userId);
-      $userToUpdate->region_id = $request->region;
-      $userToUpdate->name = $request->name;
-      $userToUpdate->email = $request->email;
-      $userToUpdate->role = $request->role; 
+      // $userToUpdate = User::find($userId);
+      // $userToUpdate->region_id = $request->region;
+      // $userToUpdate->name = $request->name;
+      // $userToUpdate->email = $request->email;
+      // $userToUpdate->role = $request->role; 
 
-      $userToUpdate->save();
+      $user->update($this->validation($request));
       // TODO: change to view(user.edit)
-      return redirect(route('user.show', $userId));
+      return redirect(route('user.show', $user));
     }
 
     public function create(){
@@ -59,23 +61,29 @@ class UserController extends Controller
 
     public function store(Request $request){
       // TODO: is it possible to create a user with just the region.name and without the region.id?
-      $this->authorize('create',[Auth::user()] );
+      // $this->authorize('create',[Auth::user()] );
       // dd($request->role);
-      $newUsr = User::create([
-        'name' =>$request->name,
-        'region_id' => $request->region,
-        'email' => $request->email,
-        'role' => $request->role,
-        'password'=>Hash::make($request->password),
-      ]);
-      return redirect(route("user.show", $newUsr->id));
+      $validatedFields =$this->validation($request);
+      $validatedFields['password'] = Hash::make('1234');
+
+      return redirect("user.show", User::create($validatedFields));
+    
     }
 
-    public function destroy($userId){
+    public function delete(User $user){
       // TODO: change to accept arrays to allow mutliple deletes at once
 
       $this->authorize('delete', [Auth::user()]);
-      User::destroy($userId);
+      // User::destroy($userId);
+      $user->destroy();
       return redirect(route('user.index'));
+    }
+
+    private function validation(Request $request){
+      return $request->validate([
+        'name' => 'required',
+        'email' => 'required',
+        'role' => 'required',
+      ]);
     }
 }

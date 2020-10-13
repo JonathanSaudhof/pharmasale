@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+{{dd($user)}} 
 @section('content')
 <div class="container">
   <div class="col-10 flex justify-between items-center rounded mx-auto mb-6 px-6 py-3 shadow-sm bg-gray-100 border border-gray-500">

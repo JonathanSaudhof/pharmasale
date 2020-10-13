@@ -33,8 +33,6 @@
                  <p>Regions: {{$data['regionCount']}} </p>
               </div>
             </div>
-            
-          
             @else
             <div class="card button-container shadow-sm mb-4">
               <div class="card-header">Shortcuts</div>
@@ -42,7 +40,6 @@
                 <a class="no-underline" href="{{route('pharmacy.create')}}" >
                   <button class="bg-gray-400 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 border border-gray-800 rounded shadow-sm"> + Pharmacy</button>
                 </a>
-
                <a class="no-underline"  href="{{route('appointment.create')}}" >
                 <button class="bg-gray-400 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow-sm"> + Appointment</button>
                </a>

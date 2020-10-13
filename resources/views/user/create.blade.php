@@ -14,7 +14,7 @@
       <label class="py-2 font-bold text-base" for="user-mail">Email:</label>
       <input class="block border rounded py-2 px-3 mb-2" type="email" name="email" placeholder="jon@example.com" id="user-mail"/>
       <label class="py-2 font-bold text-base" for="user-region">Region:</label>
-      <select class="block border rounded py-2 px-3 mb-2 " name="region" id="user-region">
+      <select class="block border rounded py-2 px-3 mb-2 " name="region_id" id="user-region">
         <option value="">Select the region</option>
         @foreach ($regions as $region)
           <option value="{{$region->id}}">{{ucfirst($region->name)}}</option>
