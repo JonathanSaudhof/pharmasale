@@ -9,7 +9,6 @@ use App\Models\Region;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
 class HomeController extends Controller
 {
     /**
@@ -29,18 +28,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if(Auth::user()->isAdmin()){
-
-          $data = [
-            'userCount' => User::all()->count(),
+        if (auth()->user()->isAdmin()) {
+            $data = [
+            'userCount' => User::countAll(),
             'regionCount' => Region::all()->count()
           ];
-
         } else {
-          $data = [
-            'lastAppointment' => Appointment::where('starts_at','<=', date('c'))->orderBy('starts_at', 'desc')->first(),
-            'todaysAppointments' => Appointment::where('starts_at','=', date('c'))->orderBy('starts_at', 'asc')->get(),
-            'nextAppointment' => Appointment::where('starts_at','>=', date('c'))->orderBy('starts_at', 'asc')->first(),
+            $data = [
+            'lastAppointment' => Appointment::where('starts_at', '<=', date('c'))->orderBy('starts_at', 'desc')->first(),
+            'todaysAppointments' => Appointment::where('starts_at', '=', date('c'))->orderBy('starts_at', 'asc')->get(),
+            'nextAppointment' => Appointment::where('starts_at', '>=', date('c'))->orderBy('starts_at', 'asc')->first(),
             'lastPharmacy' => Pharmacy::latest('updated_at')->first()
           ];
         };

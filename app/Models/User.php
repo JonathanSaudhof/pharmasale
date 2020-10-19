@@ -41,27 +41,37 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    public function isAdmin(){
-      return $this->role === 'admin';
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
     }
 
-    public function isMine($ressource){
-      if($ressource->user_id && $ressource->user_id === $this->id){
-        return true;
-      }
+    public function isMine($ressource)
+    {
+        if ($ressource->user_id && $ressource->user_id === $this->id) {
+            return true;
+        }
 
-      return false;
+        return false;
     }
 
-    public function region(){
-     return $this->belongsTo(Region::class);
+    public static function countAll()
+    {
+        return User::all()->count();
     }
 
-    public function appointments(){
-     return $this->hasMany(Appointment::class);
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
     }
     
-    public function pharmacies(){
-     return $this->hasMany(Pharmacy::class);
+    public function pharmacies()
+    {
+        return $this->hasMany(Pharmacy::class);
     }
 }
