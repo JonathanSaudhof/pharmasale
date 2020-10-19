@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Pharmacy extends Model
 {
@@ -22,18 +23,28 @@ class Pharmacy extends Model
       'contact_email',
       'contact_phone',
   ];
-  
-
-  
-
-    public function region(){
-     return  $this->belongsTo(Region::class);
+    public static function allMyPharmacies(User $user)
+    {
+        // $user->isAdmin() ?
+        if ($user->isAdmin()) {
+            return Pharmacy::with(['user', 'region'])->get();
+        }
+        
+        return Pharmacy::with(['user', 'region'])->where('user_id', '=', $user->id)->get();
     }
-    public function appointments(){
-      return $this->hasMany(Appointment::class);
+    
+
+    public function region()
+    {
+        return  $this->belongsTo(Region::class);
+    }
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
     }
 
-    public function user(){
-      return $this->belongsTo(User::class);
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

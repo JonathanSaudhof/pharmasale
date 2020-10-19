@@ -17,11 +17,13 @@ class RegionController extends Controller
     public function index(){
       
       return view('region.index', ['regions' => Region::all()]);
+
     }
 
     public function show(Region  $region){
       
       return view('region.detail',['region'=> $region, 'users' => $region->users()->get()]);
+    
     }
 
     public function edit(Region $region){
@@ -53,6 +55,7 @@ class RegionController extends Controller
        return redirect(route('region.index'));
 
     }
+
     private function validation(Request $request){
 
       return $request->validate([

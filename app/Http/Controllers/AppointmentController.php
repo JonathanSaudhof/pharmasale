@@ -9,102 +9,69 @@ use Illuminate\Support\Facades\Auth;
 use Phar;
 
 class AppointmentController extends Controller
-{   
+{
     public function __construct()
     {
-      $this->middleware('auth');
-    }
-    
-    private function checkTimestampValidity($timestamp){
-
-      // TODO: outsource to services
-
-      if($timestamp !== date('c',strtotime($timestamp))){
-        return false;
-      }
-
-      return true;
+        $this->middleware('auth');
     }
 
 
-    public function index(){
-    
-      $currentUser = Auth::user();
-      // $this->authorize('viewAny', [$currentUser]);
+    public function index()
+    {
+        $user = Auth::user();
 
-      if($currentUser->isAdmin()){
-        return view('appointment.list',['appointments'=> Appointment::with(['pharmacy', 'user'])->orderBy('starts_at','asc')->get()]);
-      }else {
-        return view('appointment.list', ['appointments'=> Appointment::with(['pharmacy', 'user'])->where('user_id', '=', $currentUser->id)->get()]);
-      }
-      
+        return view('appointment.index', ['appointments'=>Appointment::allMyAppointments($user)]);
     }
 
-    public function show($appointmentId){
-      return view('appointment.detail', ['appointment'=>Appointment::with(['pharmacy', 'user'])->find($appointmentId)]) ;
+    public function show(Appointment $appointment)
+    {
+        return view('appointment.detail', ['appointment'=> $appointment]) ;
     }
 
-    public function edit($appointmentId){
-      
-      if(Auth::user()->isAdmin()){
-        return view('appointment.edit', ['appointment'=>Appointment::with(['pharmacy', 'user'])->find($appointmentId), 'pharmacies'=> Pharmacy::all()]);
-      } else {
-        
-        return view('appointment.edit', ['appointment'=>Appointment::with(['pharmacy', 'user'])->find($appointmentId), 'pharmacies'=> Pharmacy::where('user_id','=', Auth::user()->id)->get()]);
-      }
+    public function edit(Appointment $appointment)
+    {
+        $user = Auth::user();
+        return view('appointment.edit', ['appointment'=> $appointment, 'pharmacies'=> Pharmacy::allMyPharmacies($user)]);
     }
 
   
 
-    public function update(Request $request, $appointmentId){
+    public function update(Request $request, Appointment $appointment)
+    {
+        //ddd($request);
+        $updateData =$this->validation($request);
+        $updateData['user_id'] = Pharmacy::find($request->pharmacy_id)->user_id;
+        $appointment->update();
 
-      $appointment=Appointment::find($appointmentId);
-
-      $appointment->user_id= Pharmacy::find($request->pharmacy_id)->user_id;
-      $appointment->pharmacy_id= $request->pharmacy_id;
-      $appointment->note_body= $request->note_body;
-      $appointment->starts_at= $request->starts_at;
-      $appointment->ends_at= $request->ends_at;
-
-      $appointment->save();
-
-      return redirect('appointment/'.$appointment->id);
-
+        return redirect(route('appointment.show', $appointment));
     }
 
 
-    public function create($pharmacyId=null){
-      // dd($pharmacyId);
-      if(Auth::user()->isAdmin()){
-        return view('appointment.create', ['pharmacies'=> Pharmacy::all(),'forPharmacyId'=>$pharmacyId]);
-      } else {
-        
-        return view('appointment.create', ['pharmacies'=> Pharmacy::where('user_id','=', Auth::user()->id)->get(), 'forPharmacyId'=>$pharmacyId]);
-      }
+    public function create($pharmacyId=null)
+    {
+        $user = Auth::user();
+        return view('appointment.create', ['pharmacies'=> Pharmacy::allMyPharmacies($user),'forPharmacyId'=>$pharmacyId]);
     }
-    public function store(Request $request){
+    public function store(Request $request)
+    {
+        $newAppointment = Appointment::create($this->validation($request));
 
-      //TODO:Is it possible to check, if the user is allowed to make the appointment? or should there be a default value?
+        return redirect('appointment/'.$newAppointment->id);
+    }
 
+    public function delete($appointmentId)
+    {
+        Appointment::destroy($appointmentId);
 
-      $newAppointment = Appointment::create([
-      'user_id'=> Pharmacy::find($request->pharmacy_id)->user_id,
-      'pharmacy_id'=> $request->pharmacy_id,
-      'note_body'=> $request->note_body,
-      'starts_at'=> $request->starts_at,
-      'ends_at'=> $request->ends_at
+        return redirect(route('appointment.index'));
+    }
+
+    private function validation(Request $request)
+    {
+        return $request->validate([
+        'pharmacy_id'=> "required",
+        'starts_at'=> "required",
+        'ends_at'=> "required"
       ]);
-      
-      // TODO: forward to Details page of Pharmacy
-      return redirect('appointment/'.$newAppointment->id);
-      //return $newPharmacy;
-
-    }
-
-    public function delete($appointmentId){
-    
-      Appointment::destroy($appointmentId);
-
-      return redirect(route('appointment.index'));
     }
 }
