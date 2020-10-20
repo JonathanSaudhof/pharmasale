@@ -33,7 +33,8 @@
                             Region:
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap w-1 bg-white">
-                            {{ ucfirst($pharmacy->region->name) }}
+
+                            {{ ucfirst($region->name) }}
                         </td>
                     </tr>
                     <tr>

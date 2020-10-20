@@ -51,7 +51,7 @@ class UserController extends Controller
         $validatedFields = $this->validation($request);
         $validatedFields['password'] = Hash::make('1234');
 
-        return redirect("user.show", User::create($validatedFields));
+        return redirect(route("user.show", User::create($validatedFields)));
     }
 
     public function destroy(User $user)
@@ -64,9 +64,10 @@ class UserController extends Controller
     private function validation(Request $request)
     {
         return $request->validate([
-        'name' => 'required',
-        'email' => 'required',
-        'role' => 'required',
+        'name' => 'required|string',
+        'email' => 'required|string',
+        'role' => 'required|string',
+        'region_id'=> 'string'
       ]);
     }
 }

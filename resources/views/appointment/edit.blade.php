@@ -18,7 +18,8 @@
                 <option value="">Select the pharmacy</option>
                 @foreach ($pharmacies as $pharmacy)
                     <option value="{{ $pharmacy->id }}" {{ $pharmacy->id == $appointment->pharmacy_id ? 'selected' : '' }}>
-                        {{ $pharmacy->id . ' | ' . ucfirst($pharmacy->name) }}</option>
+                        {{ $pharmacy->id . ' | ' . ucfirst($pharmacy->name) }}
+                    </option>
                 @endforeach
             </select>
             <div class="time-container w-full flex justify-between">

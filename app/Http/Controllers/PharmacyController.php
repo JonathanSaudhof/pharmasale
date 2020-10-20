@@ -27,10 +27,11 @@ class PharmacyController extends Controller
 
     public function show(Pharmacy $pharmacy)
     {
+        dd($pharmacy->region()->get());
         return view('pharmacy.detail', [
         'pharmacy'=> $pharmacy,
-        'appointments' => $pharmacy->appointments,
-        'region'=> $pharmacy->region
+        'appointments' => $pharmacy->appointments()->get(),
+        'region'=> $pharmacy->region()->get()
       ]);
     }
 
@@ -56,7 +57,6 @@ class PharmacyController extends Controller
 
     public function delete(Pharmacy $pharmacy)
     {
-        // TODO: change to accept arrays to allow mutliple deletes at once
         $pharmacy->delete();
         return view(route('pharmacy.index'));
     }
@@ -64,10 +64,14 @@ class PharmacyController extends Controller
     private function validation(Request $request)
     {
         return $request->validate([
-        "name"=> "required",
-        "adress_street" => "reuqired",
-        "adress_building_number"=> "reuqired",
-        "adress_zip_code"=> "reuqired","adress_city"=> "reuqired",
+        "name"=> "required|string",
+        "adress_street" => "required|string",
+        "adress_building_number" => "required|string",
+        "adress_zip_code" => "required|string",
+        "adress_city" => "required|string",
+        "contact_name" => "string",
+        "contact_email" => "string",
+        "contact_phone" => "string",
       ]);
     }
 }
